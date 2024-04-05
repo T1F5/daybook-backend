@@ -1,8 +1,8 @@
 package com.unit.daybook.domain.board.service;
 
-import com.unit.daybook.domain.board.dto.BoardAddReqDto;
-import com.unit.daybook.domain.board.dto.BoardAddResDto;
-import com.unit.daybook.domain.board.entity.BoardEntity;
+import com.unit.daybook.domain.board.dto.request.AddBoardRequestDto;
+import com.unit.daybook.domain.board.dto.response.AddBoardResponseDto;
+import com.unit.daybook.domain.board.entity.Board;
 import com.unit.daybook.domain.board.repository.BoardRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -16,10 +16,8 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public BoardAddResDto addBoard(BoardAddReqDto boardAddReqDto, Long memberId) {
-        BoardEntity entity = boardRepository.save(boardAddReqDto.toEntity());
-        return BoardAddResDto.builder()
-                .entity(entity)
-                .build();
+    public AddBoardResponseDto addBoard(AddBoardRequestDto addBoardRequestDto, Long memberId) {
+        return AddBoardResponseDto.from(boardRepository.save(Board.createBoard(addBoardRequestDto)));
     }
+
 }

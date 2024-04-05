@@ -1,7 +1,7 @@
 package com.unit.daybook.domain.board.controller;
 
-import com.unit.daybook.domain.board.dto.BoardAddReqDto;
-import com.unit.daybook.domain.board.dto.BoardAddResDto;
+import com.unit.daybook.domain.board.dto.request.AddBoardRequestDto;
+import com.unit.daybook.domain.board.dto.response.AddBoardResponseDto;
 import com.unit.daybook.domain.board.service.BoardService;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +26,9 @@ public class BoardController {
 
 
     @PostMapping
-    public BoardAddResDto addBoard(@RequestBody BoardAddReqDto boardAddReqDto) {
+    public AddBoardResponseDto addBoard(@RequestBody AddBoardRequestDto addBoardRequestDto) {
         Long memberId = 1L; // TODO 인증
-        return boardService.addBoard(boardAddReqDto, memberId);
+        return boardService.addBoard(addBoardRequestDto, memberId);
 
     }
 
