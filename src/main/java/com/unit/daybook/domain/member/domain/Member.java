@@ -1,17 +1,13 @@
 package com.unit.daybook.domain.member.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.unit.daybook.domain.board.entity.Board;
 import com.unit.daybook.domain.common.model.BaseTimeEntity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,6 +36,8 @@ public class Member extends BaseTimeEntity {
 
 	private LocalDateTime lastLoginAt;
 
+	@OneToMany(fetch = FetchType.LAZY)
+	private List<Board> posts = new ArrayList<>();
 
 	@Builder(access = AccessLevel.PRIVATE)
 	private Member(
@@ -63,6 +61,7 @@ public class Member extends BaseTimeEntity {
 			.role(MemberRole.USER)
 			.build();
 	}
+
 
 	public void updateLastLoginAt() {
 		this.lastLoginAt = LocalDateTime.now();

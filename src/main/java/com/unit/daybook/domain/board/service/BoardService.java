@@ -5,6 +5,8 @@ import com.unit.daybook.domain.board.dto.response.AddBoardResponseDto;
 import com.unit.daybook.domain.board.entity.Board;
 import com.unit.daybook.domain.board.repository.BoardRepository;
 
+import com.unit.daybook.domain.member.domain.Member;
+import com.unit.daybook.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final MemberRepository memberRepository;
 
     public AddBoardResponseDto addBoard(AddBoardRequestDto addBoardRequestDto, Long memberId) {
-        return AddBoardResponseDto.from(boardRepository.save(Board.createBoard(addBoardRequestDto)));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException(memberId + "not found"));
+        return AddBoardResponseDto.from(boardRepository.save(Board.createBoard(addBoardRequestDto, member)));
     }
 
 }
