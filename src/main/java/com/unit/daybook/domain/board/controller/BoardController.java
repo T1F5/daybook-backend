@@ -6,6 +6,8 @@ import com.unit.daybook.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RequestMapping("/board")
 @RestController
@@ -14,14 +16,18 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/{boardId}")
-    public String getBoard(@PathVariable("boardId") Long boardId) {
-        return "단일 조회 정보 " + boardId;
+    public AddBoardResponseDto getBoard(@PathVariable("boardId") Long boardId) {
+        return boardService.getBoard(boardId);
     }
 
     @GetMapping("/boards")
-    public String getBoards() {
-        return "목록 조회 정보";
+    public List<AddBoardResponseDto> getMyBoards() {
+        // 사용자가 작성한 일지 목록 조회
+        Long memberId = 1L; // TODO 인증
+        return boardService.getMyBoards(memberId);
     }
+
+    // TODO 사용자가 보지 않은 글 중에서 랜덤 3개 골라 주기
 
 
     @PostMapping

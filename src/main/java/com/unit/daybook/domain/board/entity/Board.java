@@ -21,6 +21,9 @@ public class Board extends BaseTimeEntity {
     @Column
     private String content;
 
+    @Column
+    private String category;
+
     @Column(name = "respect_board_id")
     private Long respectBoardId;
 
@@ -29,11 +32,12 @@ public class Board extends BaseTimeEntity {
     private Member memeber;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public Board(Long boardId, String content, Long respectBoardId, Member member) {
+    public Board(Long boardId, String content, Long respectBoardId, Member member, String category) {
         this.boardId = boardId;
         this.content = content;
         this.respectBoardId = respectBoardId;
         this.memeber = member;
+        this.category = category;
     }
 
     public static Board createBoard(AddBoardRequestDto addBoardRequestDto, Member member) {
@@ -41,6 +45,7 @@ public class Board extends BaseTimeEntity {
                 .content(addBoardRequestDto.content())
                 .respectBoardId(addBoardRequestDto.respectBoardId())
                 .member(member)
+                .category(addBoardRequestDto.category())
                 .build();
     }
 

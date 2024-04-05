@@ -6,11 +6,13 @@ public record AddBoardResponseDto(
         Long boardId,
         String content,
         Long respectBoardId,
-        Long authorId
+        Long authorId,
+        String category
+
 ) {
 
     public static AddBoardResponseDto from(Board board) {
-        return new AddBoardResponseDto(board.getBoardId(), board.getContent(), board.getRespectBoardId(), board.getMemeber().getId());
+        return new AddBoardResponseDto(board.getBoardId(), board.getContent(), board.getRespectBoardId(), board.getMemeber().getId(), board.getCategory());
     }
 
 }
