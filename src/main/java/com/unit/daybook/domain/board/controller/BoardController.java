@@ -3,17 +3,16 @@ package com.unit.daybook.domain.board.controller;
 import com.unit.daybook.domain.board.dto.request.AddBoardRequestDto;
 import com.unit.daybook.domain.board.dto.response.AddBoardResponseDto;
 import com.unit.daybook.domain.board.service.BoardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RequestMapping("/board")
 @RestController
 public class BoardController {
 
     private final BoardService boardService;
 
-    public BoardController(BoardService boardService) {
-        this.boardService = boardService;
-    }
     @GetMapping("/{boardId}")
     public String getBoard(@PathVariable("boardId") Long boardId) {
         return "단일 조회 정보 " + boardId;
