@@ -15,11 +15,11 @@ public class BoardTmpResponse {
     private String category;
     private Long hearts;
     private String papaerType;
-    private  List<String> hashtags;
+    private List<String> hashtags;
     private LocalDateTime createdAt;
 
     @Builder
-    public BoardTmpResponse(AddBoardResponseDto dto, List<String> hashtags) {
+    public BoardTmpResponse(FindOneBoardResponse dto, List<String> hashtags) {
         this.boardId = dto.boardId();
         this.content = dto.content();
         this.respectBoardId = dto.respectBoardId();

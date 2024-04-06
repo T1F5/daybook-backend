@@ -1,6 +1,9 @@
 package com.unit.daybook.domain.board.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.unit.daybook.domain.board.entity.Board;
+import com.unit.daybook.domain.board.entity.ReadBoard;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -14,21 +17,19 @@ import static com.unit.daybook.domain.member.domain.QMember.member;
 
 @Repository
 @RequiredArgsConstructor
-public class ReadBoardRepositoryImpl implements BoardRepositoryCustom {
+public class ReadBoardRepositoryImpl implements ReadBoardRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
-    public List<Long> findBoardsByMemberId(Long memberId) {
+    public List<Board> findBoardsByMemberId(Long memberId) {
 
-        List<Long> boards = queryFactory
-                .select(readBoard.board.boardId)
+        return queryFactory
+                .select(readBoard.board)
                 .from(readBoard)
                 .innerJoin(readBoard.member, member)
                 .where(
                         member.id.eq(memberId)
                 )
                 .fetch();
-
-        return boards;
     }
 
     public List<Long> findTodayBoardsByMemberId(Long memberId) {
@@ -38,10 +39,14 @@ public class ReadBoardRepositoryImpl implements BoardRepositoryCustom {
                 .select(readBoard.board.boardId)
                 .from(readBoard)
                 .innerJoin(readBoard.board, board)
+                .on(readBoard.board.boardId.eq(board.boardId))
                 .innerJoin(readBoard.member, member)
+                .on(readBoard.member.id.eq(member.id))
                 .where(
                         member.id.eq(memberId)
-                                .and(readBoard.createdAt.between(currentDate.atStartOfDay(), currentDate.atStartOfDay().plusDays(1).minusNanos(1))
+                                .and(readBoard.createdAt.between(
+                                    currentDate.atStartOfDay(),
+                                    currentDate.atStartOfDay().plusDays(1).minusNanos(1))
                 ))
                 .fetch();
     }
