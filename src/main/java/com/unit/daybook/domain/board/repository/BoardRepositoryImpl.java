@@ -78,6 +78,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .selectFrom(board)
                 .innerJoin(board.hashtags, hashtag)
                 .where(board.boardId.eq(boardId))
+                .limit(3)
                 .fetch();
 
     }

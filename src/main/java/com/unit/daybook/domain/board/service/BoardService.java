@@ -86,6 +86,17 @@ public class BoardService {
                     .map(BoardResponseDto::from)
                     .toList();
         }
+        result = new ArrayList<>();
+        List<Board> boards = getCurrentBoards(memberId);
+        // read-board 에도 적재
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException(memberId + "not found"));
+        int toSave = 3 - result.size();
+        for (int i =0 ; i<toSave; i++) {
+            ReadBoard entity = ReadBoard.createReadBoard(member, boards.get(i));
+            result.add(AddBoardResponseDto.from(boards.get(i)));
+            readBoardRepository.save(entity);
+        }
+
         return result;
     }
 

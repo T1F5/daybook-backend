@@ -36,7 +36,7 @@ public class ReadBoardRepositoryImpl implements ReadBoardRepositoryCustom {
         LocalDate currentDate = LocalDateTime.now().toLocalDate(); // 현재 날짜의 일자만 추출
 
         return queryFactory
-                .select(readBoard.readBoardId)
+                .select(readBoard.board.boardId)
                 .from(readBoard)
                 .innerJoin(readBoard.board, board)
                 .on(readBoard.board.boardId.eq(board.boardId))
