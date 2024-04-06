@@ -1,0 +1,12 @@
+#green
+version: '3'
+services:
+  backend:
+    build: .
+    ports:
+      - "8080:8080"
+    container_name: daybook-green
+    environment:
+      - TZ=Asia/Seoul
+    env_file:
+      - .env
