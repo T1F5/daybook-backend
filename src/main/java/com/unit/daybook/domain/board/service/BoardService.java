@@ -63,20 +63,22 @@ public class BoardService {
                 .toList();
     }
 
-    @Transactional(readOnly = true)
     public List<AddBoardResponseDto> getRandomBoards(Long memberId) {
         List<AddBoardResponseDto> result = getTodayBoardByMemberId(memberId);
-        if (result.size() < 3) {
-            List<Board> boards = getCurrentBoards(memberId);
-            // read-board 에도 적재
-            Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException(memberId + "not found"));
-            readBoardRepository.save(ReadBoard.createReadBoard(member, boards.get(0)));
-            readBoardRepository.save(ReadBoard.createReadBoard(member, boards.get(1)));
-            readBoardRepository.save(ReadBoard.createReadBoard(member, boards.get(2)));
-            result = boards.stream()
-                    .map(AddBoardResponseDto::from)
-                    .toList();
+        if (result.size() == 3) {
+            return result;
         }
+        result = new ArrayList<>();
+        List<Board> boards = getCurrentBoards(memberId);
+        // read-board 에도 적재
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException(memberId + "not found"));
+        int toSave = 3 - result.size();
+        for (int i =0 ; i<toSave; i++) {
+            ReadBoard entity = ReadBoard.createReadBoard(member, boards.get(i));
+            result.add(AddBoardResponseDto.from(boards.get(i)));
+            readBoardRepository.save(entity);
+        }
+
         return result;
     }
 
