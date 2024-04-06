@@ -2,6 +2,7 @@ package com.unit.daybook.domain.board.dto.response;
 
 import com.unit.daybook.domain.board.entity.Board;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public record AddBoardResponseDto(
@@ -13,12 +14,12 @@ public record AddBoardResponseDto(
         String category,
         Long hearts,
         List<String> hashtags,
-        String paperType
-
+        String paperType,
+        LocalDateTime createdAt
 ) {
 
     public static AddBoardResponseDto from(Board board) {
         List<String> hashContents = board.getHashtags().stream().map(hashtag -> hashtag.getContent()).toList();
-        return new AddBoardResponseDto(board.getBoardId(), board.getContent(), board.getRespectBoardId(), board.getMemeber().getId(), board.getCategory(), board.getHearts(), hashContents, board.getPaperType());
+        return new AddBoardResponseDto(board.getBoardId(), board.getContent(), board.getRespectBoardId(), board.getMemeber().getId(), board.getCategory(), board.getHearts(), hashContents, board.getPaperType(), board.getCreatedAt());
     }
 }
