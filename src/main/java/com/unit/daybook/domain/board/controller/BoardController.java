@@ -3,8 +3,10 @@ package com.unit.daybook.domain.board.controller;
 import com.unit.daybook.domain.board.dto.request.AddBoardRequestDto;
 import com.unit.daybook.domain.board.dto.response.AddBoardResponseDto;
 import com.unit.daybook.domain.board.dto.response.BoardTmpResponse;
+import com.unit.daybook.domain.board.entity.ReadBoard;
 import com.unit.daybook.domain.board.service.BoardService;
 import com.unit.daybook.domain.common.annotation.LoginUsers;
+import com.unit.daybook.domain.member.domain.Member;
 import com.unit.daybook.global.config.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -35,10 +37,13 @@ public class BoardController {
     /**
      * 사용자가 보지 않은 글 중에서 랜덤 3개 골라 주기
      * 밤 12시에 적재된 사용자가 읽지 않은 글을 조회
+     * 만약 배치 후 가입한 사용자라면, 자기가 쓰지 않은 최신글
      */
     @GetMapping("/random")
     public List<AddBoardResponseDto> getRandomBoards(@LoginUsers CustomUserDetails userDetails) {
-        return boardService.getRandomBoards(userDetails.getMemberId());
+        List<AddBoardResponseDto> result = boardService.getRandomBoards(userDetails.getMemberId());
+
+        return result;
     }
 
     @PostMapping

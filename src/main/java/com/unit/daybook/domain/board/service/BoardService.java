@@ -65,7 +65,19 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public List<AddBoardResponseDto> getRandomBoards(Long memberId) {
-        return getTodayBoardByMemberId(memberId);
+        List<AddBoardResponseDto> result = getTodayBoardByMemberId(memberId);
+        if (result.size() < 3) {
+            List<Board> boards = getCurrentBoards(memberId);
+            // read-board 에도 적재
+            Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException(memberId + "not found"));
+            readBoardRepository.save(ReadBoard.createReadBoard(member, boards.get(0)));
+            readBoardRepository.save(ReadBoard.createReadBoard(member, boards.get(1)));
+            readBoardRepository.save(ReadBoard.createReadBoard(member, boards.get(2)));
+            result = boards.stream()
+                    .map(AddBoardResponseDto::from)
+                    .toList();
+        }
+        return result;
     }
 
 
@@ -131,7 +143,7 @@ public class BoardService {
         List<Hashtag> originHashContents = board.getHashtags();
 
 
-        for(int i =0;i<newHashContents.size();i++) {
+        for (int i = 0; i < newHashContents.size(); i++) {
             hashtagRepository.save(Hashtag.createHashtag(newHashContents.get(i), board));
         }
 
@@ -154,5 +166,13 @@ public class BoardService {
         // return AddBoardResponseDto.from(boardRepositoryImpl.findBoardWithHashtag(boardId).get(0));
 
 
+    }
+
+    public List<Board> getCurrentBoards(Long memberId) {
+        List<Board> result = boardRepositoryImpl.findCurrentBoards(memberId);
+        return result;
+//        return result.stream()
+//                .map(AddBoardResponseDto::from)
+//                .toList();
     }
 }

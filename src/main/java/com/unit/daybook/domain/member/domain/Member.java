@@ -36,7 +36,7 @@ public class Member extends BaseTimeEntity {
 
 	private LocalDateTime lastLoginAt;
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Board> boards = new ArrayList<>();
 
 	@Builder(access = AccessLevel.PRIVATE)

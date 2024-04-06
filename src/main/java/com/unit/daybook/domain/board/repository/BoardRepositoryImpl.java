@@ -5,6 +5,7 @@ import com.unit.daybook.domain.board.entity.Board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.unit.daybook.domain.board.entity.QBoard.board;
@@ -35,8 +36,10 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .from(board)
                 .join(board.memeber, member).fetchJoin()
                 .where(
-                        member.id.eq(memberId)
-                                .and(board.boardId.notIn(aleadyReadBoardIds))
+                        // member.id.eq(memberId)
+                                //.and(
+                                        board.boardId.notIn(aleadyReadBoardIds)
+                                        //)
                 )
                 .fetch();
 
@@ -77,5 +80,14 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .where(board.boardId.eq(boardId))
                 .fetch();
 
+    }
+
+    public List<Board> findCurrentBoards(Long memberId) {
+        ArrayList<Long> tmps = new ArrayList<>();
+        tmps.add(memberId);
+        return queryFactory
+                .selectFrom(board)
+                .where(board.memeber.id.notIn(tmps))
+                .fetch();
     }
 }
