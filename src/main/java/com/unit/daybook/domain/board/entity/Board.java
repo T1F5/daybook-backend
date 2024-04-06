@@ -1,6 +1,7 @@
 package com.unit.daybook.domain.board.entity;
 
 import com.unit.daybook.domain.board.dto.request.AddBoardRequestDto;
+import com.unit.daybook.domain.comment.entity.Comment;
 import com.unit.daybook.domain.common.model.BaseTimeEntity;
 import com.unit.daybook.domain.member.domain.Member;
 import com.unit.daybook.domain.reaction.entity.Reaction;
@@ -42,11 +43,14 @@ public class Board extends BaseTimeEntity {
     @Column
     private Long hearts;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Hashtag> hashtags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reaction> reactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder(access = AccessLevel.PRIVATE)
     public Board(Long boardId, String content, Long respectBoardId, Member member, String category, Long hearts, String paperType) {

@@ -1,6 +1,7 @@
 package com.unit.daybook.domain.reaction.entity;
 
 import com.unit.daybook.domain.board.entity.Board;
+import com.unit.daybook.domain.common.model.BaseTimeEntity;
 import com.unit.daybook.domain.member.domain.Member;
 
 import jakarta.persistence.*;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "reaction")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Reaction {
+public class Reaction extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
