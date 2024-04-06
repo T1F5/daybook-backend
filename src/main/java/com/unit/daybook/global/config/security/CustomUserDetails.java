@@ -18,12 +18,12 @@ public class CustomUserDetails implements UserDetails {
 	private final String nickname;
 	private final List<GrantedAuthority> authorityList;
 
-	public CustomUserDetails(Long memberId, String snsId, String email, String userNickname) {
+	public CustomUserDetails(Long memberId, String snsId, String email, String nickname) {
 		this.memberId = memberId;
 		this.snsId = snsId;
 		this.authorityList = new ArrayList<>();
 		this.email = email;
-		this.nickname = userNickname;
+		this.nickname = nickname;
 	}
 
 	@Override
@@ -61,8 +61,5 @@ public class CustomUserDetails implements UserDetails {
 		return true;
 	}
 
-	public void setUserId(Long userId) {
-		this.memberId = userId;
-	}
 
 }
