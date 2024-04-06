@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TokenService {
 	private static final Long DEFAULT_EXPIRATION_MINUTES = 60L;
 
-	@Value("${jwt.secret-key}")
+	@Value("${util.jwt.secretKey}")
 	private String secretKey;
 
 	private static SecretKey createSecretKey(String key) {
@@ -42,7 +42,7 @@ public class TokenService {
 	}
 
 	public static String parseTokenByRequest(HttpServletRequest request) {
-		final String authHeader = request.getHeader("authorization");
+		final String authHeader = request.getHeader("Authorization");
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			return authHeader.substring(7);
 		}
@@ -126,12 +126,12 @@ public class TokenService {
 
 		// token정보 이외에 추가로 정보가 필요해서 DB의 데이터를 조회해서 userDetails정보를 만드려면 UserDetailsService 인터페이스를 캐시서비스 또는 유저서비스에서 구현해서 userDetails를 리턴하게 하면 된다.
 		// 꼭 UserDetailsService 인터페이스를 구현하지 않아도 되고 DB를 조회해서 userDetails에 데이터를 넣어서 리턴해주게 만들면된다.
-		Long userId = Long.parseLong(claims.get("memberId").toString());
-		String userSnsId = claims.get("snsId") != null ? claims.get("snsId").toString() : null;
-		String userEmail = claims.get("email") != null ? claims.get("email").toString() : null;
-		String userNickname = claims.get("nickname").toString();
+		Long memberId = Long.parseLong(claims.get("memberId").toString());
+		String snsId = claims.get("snsId") != null ? claims.get("snsId").toString() : null;
+		String email = claims.get("email") != null ? claims.get("email").toString() : null;
+		String nickname = claims.get("nickname").toString();
 
-		return new CustomUserDetails(userId, userSnsId, userEmail, userNickname);
+		return new CustomUserDetails(memberId, snsId, email, nickname);
 	}
 
 
@@ -162,13 +162,21 @@ public class TokenService {
 	 * @return
 	 */
 	private Map<String, Object> getClaims(String jwt) {
-		if (jwt == null || jwt.isEmpty()) {
+		try {
+			if (jwt == null || jwt.isEmpty()) {
+				return null;
+			}
+			SecretKey key = createSecretKey(secretKey);
+			return Jwts.parserBuilder()
+				.setSigningKey(key)
+				.build()
+				.parseClaimsJws(jwt)
+				.getBody();
+		} catch (Exception e) {
+			// 예외 처리
+			e.printStackTrace();
 			return null;
 		}
-		return Jwts.parserBuilder()
-			.setSigningKey(secretKey)
-			.build()
-			.parseClaimsJws(jwt)
-			.getBody();
 	}
+
 }

@@ -19,7 +19,10 @@ public enum ErrorCode {
 	KAKAO_RESPONSE_NOT_FOUND(HttpStatus.UNAUTHORIZED, "카카오에 대한 응답값이 존재하지 않습니다."),
 	CLAIMS_IS_NULL(HttpStatus.UNAUTHORIZED, "Claim이 null 값입니다."),
 	INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않는 토큰입니다."),
-	;
+	EXPIRED_REFRESH_TOKEN(HttpStatus.FORBIDDEN, "리프레시 토큰이 만료되었습니다."),
+
+	// Member
+	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다.");
 	private final HttpStatus status;
 	private final String message;
 }
