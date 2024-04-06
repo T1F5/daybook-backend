@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.unit.daybook.domain.board.entity.Board;
 import com.unit.daybook.domain.common.model.BaseTimeEntity;
+import com.unit.daybook.domain.reaction.entity.Reaction;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
