@@ -6,7 +6,7 @@ services:
     # 현재 디렉토리에서의 Dockerfile을 사용하여 Docker 이미지를 빌드
     build: .
     ports:
-      - "8081:80"
+      - "3000:8080"
     container_name: daybook-blue
     environment:
       - TZ=Asia/Seoul
