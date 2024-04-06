@@ -50,7 +50,7 @@ public class Board extends BaseTimeEntity {
                 .respectBoardId(addBoardRequestDto.respectBoardId())
                 .member(member)
                 .category(addBoardRequestDto.category())
-                .hearts(0L) // todo
+                .hearts(0L)
                 .build();
     }
 

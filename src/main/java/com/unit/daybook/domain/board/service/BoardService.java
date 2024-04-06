@@ -63,22 +63,28 @@ public class BoardService {
     }
 
 
-    public void batchReadBoard(Long memberId) {
-        // 이미 읽은 일지
-        List<Long> aleadyReadBoardIds = readBoardRepositoryImpl.findBoardsByMemberId(memberId);
+    public void batchReadBoard() {
 
-        // 안 읽은 일지
-        List<Board> notReadBoards = boardRepositoryImpl.findNotReadBoardsByMemberId(memberId, aleadyReadBoardIds);
+        List<Long> memberIds = memberRepository.findAll().stream().map(Member::getId).toList();
 
-        // 적재할 일지 고유 id
-        List<Long> randomIdxs = selectRandomNumbers(notReadBoards.size() - 1);
+        for (int i = 0; i < memberIds.size(); i++) {
+            Long memberId = memberIds.get(i);
+            // 이미 읽은 일지
+            List<Long> aleadyReadBoardIds = readBoardRepositoryImpl.findBoardsByMemberId(memberId);
 
-        // 적재
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException(memberId + "not found"));
-        readBoardRepository.save(ReadBoard.createReadBoard(member, notReadBoards.get(Math.toIntExact(randomIdxs.get(0)))));
-        readBoardRepository.save(ReadBoard.createReadBoard(member, notReadBoards.get(Math.toIntExact(randomIdxs.get(1)))));
-        readBoardRepository.save(ReadBoard.createReadBoard(member, notReadBoards.get(Math.toIntExact(randomIdxs.get(2)))));
+            // 안 읽은 일지
+            List<Board> notReadBoards = boardRepositoryImpl.findNotReadBoardsByMemberId(memberId, aleadyReadBoardIds);
 
+            // 적재할 일지 고유 id
+            List<Long> randomIdxs = selectRandomNumbers(notReadBoards.size() - 1);
+
+            // 적재
+            Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException(memberId + "not found"));
+            readBoardRepository.save(ReadBoard.createReadBoard(member, notReadBoards.get(Math.toIntExact(randomIdxs.get(0)))));
+            readBoardRepository.save(ReadBoard.createReadBoard(member, notReadBoards.get(Math.toIntExact(randomIdxs.get(1)))));
+            readBoardRepository.save(ReadBoard.createReadBoard(member, notReadBoards.get(Math.toIntExact(randomIdxs.get(2)))));
+
+        }
     }
 
     public List<AddBoardResponseDto> getTodayBoardByMemberId(Long memberId) {

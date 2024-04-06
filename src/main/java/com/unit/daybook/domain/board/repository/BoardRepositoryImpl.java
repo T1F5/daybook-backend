@@ -46,7 +46,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .select(board)
                 .from(board)
                 .where(
-                        (board.boardId.in(todayBoards))
+                        board.boardId.in(todayBoards)
                 )
                 .fetch();
 
