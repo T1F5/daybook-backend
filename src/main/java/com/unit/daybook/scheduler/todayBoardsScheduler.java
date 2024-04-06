@@ -21,7 +21,7 @@ public class todayBoardsScheduler {
         System.out.println(LocalDateTime.now().toString());
         List<Long> memberIds = memberRepository.findAll().stream().map(Member::getId).toList();
 
-        boardService.batchReadBoard(memberId);
+        boardService.batchReadBoard();
 
     }
 }
