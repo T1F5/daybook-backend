@@ -1,10 +1,7 @@
 package com.unit.daybook.domain.board.controller;
 
 import com.unit.daybook.domain.board.dto.request.AddBoardRequestDto;
-import com.unit.daybook.domain.board.dto.response.BoardResponseDto;
-import com.unit.daybook.domain.board.dto.response.BoardTmpResponse;
-import com.unit.daybook.domain.board.dto.response.FindBoardListResponse;
-import com.unit.daybook.domain.board.dto.response.FindOneBoardResponse;
+import com.unit.daybook.domain.board.dto.response.*;
 import com.unit.daybook.domain.board.service.BoardService;
 import com.unit.daybook.domain.common.annotation.LoginUsers;
 import com.unit.daybook.global.config.security.CustomUserDetails;
@@ -33,8 +30,9 @@ public class BoardController {
      * 사용자가 작성한 일지 목록 조회
      */
     @GetMapping("/boards")
-    public FindBoardListResponse getMyBoards(@LoginUsers CustomUserDetails userDetails) {
-        return boardService.getMyBoards(userDetails.getMemberId());
+    public List<FindBoardResponse> getMyBoards(@LoginUsers CustomUserDetails userDetails) {
+        FindBoardListResponse tmp = boardService.getMyBoards(userDetails.getMemberId());
+        return tmp.boards();
     }
 
     /**
