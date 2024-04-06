@@ -11,7 +11,7 @@ public enum UrlConstants {
 	LOCAL_SERVER_URL("http://localhost:8080"),
 
 	PROD_DOMAIN_URL("https://www.daybook.co.kr"),
-	LOCAL_DOMAIN_URL("http://localhost:3000"),
+	LOCAL_DOMAIN_URL("http://localhost:5173"),
 
 	;
 	private final String value;
