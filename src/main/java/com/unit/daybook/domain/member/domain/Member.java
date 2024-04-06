@@ -40,7 +40,6 @@ public class Member extends BaseTimeEntity {
 
 	private LocalDateTime lastLoginAt;
 
-
 	@Builder(access = AccessLevel.PRIVATE)
 	private Member(
 		String nickname,
