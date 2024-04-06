@@ -4,7 +4,7 @@ name: Daybook - BackEnd - CD
 on:
   push:
     # main branch에 push(merge)될 경우 실행됩니다.
-    branches: [ "feature/#20" ]
+    branches: [ "main" ]
 
 permissions:
   contents: read
