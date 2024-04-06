@@ -30,7 +30,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
     }
 
-    public List<Board> findNotReadBoardsByMemberId(Long memberId, List<Long> aleadyReadBoardIds) {
+    public List<Board> findNotReadBoardsByMemberId(Long memberId, List<Board> alreadyReadBoardIds) {
         return queryFactory
                 .select(board)
                 .from(board)
@@ -38,19 +38,19 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .where(
                         // member.id.eq(memberId)
                                 //.and(
-                                        board.boardId.notIn(aleadyReadBoardIds)
+                                        board.in(alreadyReadBoardIds)
                                         //)
                 )
                 .fetch();
 
     }
 
-    public List<Board> findBoardInBoardIds(List<Long> todayBoards) {
+    public List<Board> findBoardInBoardIds(List<Long> todayBoardIds) {
         return queryFactory
                 .select(board)
                 .from(board)
                 .where(
-                        board.boardId.in(todayBoards)
+                        board.boardId.in(todayBoardIds)
                 )
                 .fetch();
 

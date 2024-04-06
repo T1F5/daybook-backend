@@ -1,8 +1,10 @@
 package com.unit.daybook.domain.board.service;
 
 import com.unit.daybook.domain.board.dto.request.AddBoardRequestDto;
-import com.unit.daybook.domain.board.dto.response.AddBoardResponseDto;
+import com.unit.daybook.domain.board.dto.response.BoardResponseDto;
 import com.unit.daybook.domain.board.dto.response.BoardTmpResponse;
+import com.unit.daybook.domain.board.dto.response.FindBoardListResponse;
+import com.unit.daybook.domain.board.dto.response.FindOneBoardResponse;
 import com.unit.daybook.domain.board.entity.Board;
 import com.unit.daybook.domain.board.entity.Hashtag;
 import com.unit.daybook.domain.board.entity.ReadBoard;
@@ -10,6 +12,11 @@ import com.unit.daybook.domain.board.repository.*;
 
 import com.unit.daybook.domain.member.domain.Member;
 import com.unit.daybook.domain.member.repository.MemberRepository;
+import com.unit.daybook.domain.reaction.dto.response.ReactionTypeAndCount;
+import com.unit.daybook.domain.reaction.repository.ReactionRepository;
+import com.unit.daybook.global.error.exception.CustomException;
+import com.unit.daybook.global.error.exception.ErrorCode;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,18 +29,18 @@ import java.util.*;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final BoardRepositoryImpl boardRepositoryImpl;
     private final MemberRepository memberRepository;
-    private final ReadBoardRepositoryImpl readBoardRepositoryImpl;
     private final ReadBoardRepository readBoardRepository;
     private final HashtagRepository hashtagRepository;
-    private final HashtagRepositoryImpl hashtagRepositoryImpl;
+    private final ReactionRepository reactionRepository;
 
-    public AddBoardResponseDto addBoard(AddBoardRequestDto addBoardRequestDto, Long memberId) {
-
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException(memberId + "not found"));
+    public BoardResponseDto addBoard(AddBoardRequestDto addBoardRequestDto, Long memberId) {
+        Member member = memberRepository
+            .findById(memberId).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         if (addBoardRequestDto.respectBoardId() != null) {
-            Board respectBoard = boardRepository.findById(addBoardRequestDto.respectBoardId()).orElseThrow(() -> new RuntimeException(addBoardRequestDto.respectBoardId() + "not found"));
+            Board respectBoard = boardRepository
+                .findById(addBoardRequestDto.respectBoardId())
+                .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
             respectBoard.plusRespect();
             boardRepository.save(respectBoard);
         }
@@ -45,36 +52,38 @@ public class BoardService {
             hashtagRepository.save(Hashtag.createHashtag(addBoardRequestDto.hashtags().get(i), board));
         }
 
-        return AddBoardResponseDto.from(board);
+        return BoardResponseDto.from(board);
     }
 
     @Transactional(readOnly = true)
-    public AddBoardResponseDto getBoard(Long boardId) {
-        return AddBoardResponseDto.from(
-                boardRepository.findById(boardId).orElseThrow(() -> new RuntimeException(boardId + "not found")));
+    public FindOneBoardResponse getBoard(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+            .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
+        List<ReactionTypeAndCount> reactions = reactionRepository.findAllByBoardGroupByReactionType(board);
+
+        return FindOneBoardResponse.of(board, reactions);
     }
 
     @Transactional(readOnly = true)
-    public List<AddBoardResponseDto> getMyBoards(Long memberId) {
-        // 페이지네이션x - 스와이프 방식
-        return boardRepositoryImpl.findBoardsByMemberId(memberId)
-                .stream()
-                .map(AddBoardResponseDto::from)
-                .toList();
+    public FindBoardListResponse getMyBoards(Long memberId) {
+        List<Board> boards= boardRepository.findBoardsByMemberId(memberId);
+        return FindBoardListResponse.from(boards);
     }
 
     @Transactional(readOnly = true)
-    public List<AddBoardResponseDto> getRandomBoards(Long memberId) {
-        List<AddBoardResponseDto> result = getTodayBoardByMemberId(memberId);
+    public List<BoardResponseDto> getRandomBoards(Long memberId) {
+        List<BoardResponseDto> result = getTodayBoardByMemberId(memberId);
         if (result.size() < 3) {
             List<Board> boards = getCurrentBoards(memberId);
             // read-board 에도 적재
-            Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException(memberId + "not found"));
+            Member member = memberRepository
+                .findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
             readBoardRepository.save(ReadBoard.createReadBoard(member, boards.get(0)));
             readBoardRepository.save(ReadBoard.createReadBoard(member, boards.get(1)));
             readBoardRepository.save(ReadBoard.createReadBoard(member, boards.get(2)));
             result = boards.stream()
-                    .map(AddBoardResponseDto::from)
+                    .map(BoardResponseDto::from)
                     .toList();
         }
         return result;
@@ -85,31 +94,34 @@ public class BoardService {
 
         List<Long> memberIds = memberRepository.findAll().stream().map(Member::getId).toList();
 
-        for (int i = 0; i < memberIds.size(); i++) {
-            Long memberId = memberIds.get(i);
-            // 이미 읽은 일지
-            List<Long> aleadyReadBoardIds = readBoardRepositoryImpl.findBoardsByMemberId(memberId);
+		for (Long memberId : memberIds) {
+			// 이미 읽은 일지
+			List<Board> alreadyReadBoards = readBoardRepository.findBoardsByMemberId(memberId);
 
-            // 안 읽은 일지
-            List<Board> notReadBoards = boardRepositoryImpl.findNotReadBoardsByMemberId(memberId, aleadyReadBoardIds);
+			// 안 읽은 일지
+			List<Board> notReadBoards = boardRepository.findNotReadBoardsByMemberId(memberId, alreadyReadBoards);
 
-            // 적재할 일지 고유 id
-            List<Long> randomIdxs = selectRandomNumbers(notReadBoards.size() - 1);
+			// 적재할 일지 고유 id
+			List<Long> randomIdxs = selectRandomNumbers(notReadBoards.size() - 1);
 
-            // 적재
-            Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException(memberId + "not found"));
-            readBoardRepository.save(ReadBoard.createReadBoard(member, notReadBoards.get(Math.toIntExact(randomIdxs.get(0)))));
-            readBoardRepository.save(ReadBoard.createReadBoard(member, notReadBoards.get(Math.toIntExact(randomIdxs.get(1)))));
-            readBoardRepository.save(ReadBoard.createReadBoard(member, notReadBoards.get(Math.toIntExact(randomIdxs.get(2)))));
+			// 적재
+			Member member = memberRepository.findById(memberId)
+				.orElseThrow(() -> new RuntimeException(memberId + "not found"));
+			readBoardRepository.save(
+				ReadBoard.createReadBoard(member, notReadBoards.get(Math.toIntExact(randomIdxs.get(0)))));
+			readBoardRepository.save(
+				ReadBoard.createReadBoard(member, notReadBoards.get(Math.toIntExact(randomIdxs.get(1)))));
+			readBoardRepository.save(
+				ReadBoard.createReadBoard(member, notReadBoards.get(Math.toIntExact(randomIdxs.get(2)))));
 
-        }
+		}
     }
 
-    public List<AddBoardResponseDto> getTodayBoardByMemberId(Long memberId) {
-        List<Long> todayBoards = readBoardRepositoryImpl.findTodayBoardsByMemberId(memberId);
-        List<Board> result = boardRepositoryImpl.findBoardInBoardIds(todayBoards);
+    public List<BoardResponseDto> getTodayBoardByMemberId(Long memberId) {
+        List<Long> todayBoardIds = readBoardRepository.findTodayBoardsByMemberId(memberId);
+        List<Board> result = boardRepository.findBoardInBoardIds(todayBoardIds);
         return result.stream()
-                .map(AddBoardResponseDto::from)
+                .map(BoardResponseDto::from)
                 .toList();
     }
 
@@ -134,45 +146,33 @@ public class BoardService {
         return randomNumbers;
     }
 
-    public BoardTmpResponse modifyBoard(Long boardId, AddBoardRequestDto addBoardRequestDto) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() -> new RuntimeException(boardId + ""));
-        board.modifyBoard(addBoardRequestDto);
-        List<String> newHashContents = addBoardRequestDto.hashtags();
-        List<String> newHashContents2 = addBoardRequestDto.hashtags();
+    // public BoardTmpResponse modifyBoard(Long boardId, AddBoardRequestDto addBoardRequestDto) {
+    //     Board board = boardRepository.findById(boardId).orElseThrow(() -> new RuntimeException(boardId + ""));
+    //     board.modifyBoard(addBoardRequestDto);
+    //     List<String> newHashContents = addBoardRequestDto.hashtags();
+    //     List<String> newHashContents2 = addBoardRequestDto.hashtags();
+    //
+    //     List<Hashtag> originHashContents = board.getHashtags();
+    //
+	// 	for (String newHashContent : newHashContents) {
+	// 		hashtagRepository.save(Hashtag.createHashtag(newHashContent, board));
+	// 	}
+    //
+    //     return BoardTmpResponse.builder().dto(AddBoardResponseDto.from(board)).hashtags(newHashContents).build();
+    // }
 
-        List<Hashtag> originHashContents = board.getHashtags();
-
-
-        for (int i = 0; i < newHashContents.size(); i++) {
-            hashtagRepository.save(Hashtag.createHashtag(newHashContents.get(i), board));
-        }
-
-        return BoardTmpResponse.builder().dto(AddBoardResponseDto.from(board)).hashtags(newHashContents).build();
-    }
-
-    public Map<String, Long> deleteBoard(Long boardId) {
+    public void deleteBoard(Long boardId) {
         boardRepository.deleteById(boardId);
-        Map<String, Long> result = new HashMap<>();
-        result.put("boardId", boardId);
-        return result;
     }
 
     public BoardTmpResponse getBoardWithHashTag(Long boardId) {
-        //List<Board> x = boardRepositoryImpl.findBoardWithHashtag(boardId).get(0);
-
-        List<String> hashContents = hashtagRepositoryImpl.findAllByBoardId(boardId);
-        AddBoardResponseDto result = getBoard(boardId);
+        List<String> hashContents = hashtagRepository.findAllByBoardId(boardId);
+        FindOneBoardResponse result = getBoard(boardId);
         return BoardTmpResponse.builder().dto(result).hashtags(hashContents).build();
-        // return AddBoardResponseDto.from(boardRepositoryImpl.findBoardWithHashtag(boardId).get(0));
-
 
     }
 
-    public List<Board> getCurrentBoards(Long memberId) {
-        List<Board> result = boardRepositoryImpl.findCurrentBoards(memberId);
-        return result;
-//        return result.stream()
-//                .map(AddBoardResponseDto::from)
-//                .toList();
+    private List<Board> getCurrentBoards(Long memberId) {
+		return boardRepository.findCurrentBoards(memberId);
     }
 }
