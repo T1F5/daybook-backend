@@ -26,6 +26,7 @@ public class AuthService {
 	public SocialLoginResponse socialLoginMember(OAuthLoginParams params) {
 		OAuthInfoResponse oAuthInfoResponse = requestOAuthInfoService.request(params);
 		Member member = findOrCreateMember(oAuthInfoResponse, params.oAuthProvider());
+		member.updateLastLoginAt();
 		return authTokensGenerator.generate(member);
 	}
 
