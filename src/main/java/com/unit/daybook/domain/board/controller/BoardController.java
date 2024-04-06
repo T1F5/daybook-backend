@@ -4,6 +4,8 @@ import com.unit.daybook.domain.board.dto.request.AddBoardRequestDto;
 import com.unit.daybook.domain.board.dto.response.AddBoardResponseDto;
 import com.unit.daybook.domain.board.dto.response.BoardTmpResponse;
 import com.unit.daybook.domain.board.service.BoardService;
+import com.unit.daybook.domain.common.annotation.LoginUsers;
+import com.unit.daybook.global.config.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +28,8 @@ public class BoardController {
      * 사용자가 작성한 일지 목록 조회
      */
     @GetMapping("/boards")
-    public List<AddBoardResponseDto> getMyBoards() {
-        Long memberId = 1L; // TODO 인증
-        return boardService.getMyBoards(memberId);
+    public List<AddBoardResponseDto> getMyBoards(@LoginUsers CustomUserDetails userDetails) {
+        return boardService.getMyBoards(userDetails.getMemberId());
     }
 
     /**
@@ -36,15 +37,13 @@ public class BoardController {
      * 밤 12시에 적재된 사용자가 읽지 않은 글을 조회
      */
     @GetMapping("/random")
-    public List<AddBoardResponseDto> getRandomBoards() {
-        Long memberId = 1L; // TODO 인증
-        return boardService.getRandomBoards(memberId);
+    public List<AddBoardResponseDto> getRandomBoards(@LoginUsers CustomUserDetails userDetails) {
+        return boardService.getRandomBoards(userDetails.getMemberId());
     }
 
     @PostMapping
-    public BoardTmpResponse addBoard(@RequestBody AddBoardRequestDto addBoardRequestDto) {
-        Long memberId = 1L; // TODO 인증
-        AddBoardResponseDto board = boardService.addBoard(addBoardRequestDto, memberId);
+    public BoardTmpResponse addBoard(@RequestBody AddBoardRequestDto addBoardRequestDto, @LoginUsers CustomUserDetails userDetails) {
+        AddBoardResponseDto board = boardService.addBoard(addBoardRequestDto, userDetails.getMemberId());
         return boardService.getBoardWithHashTag(board.boardId());
     }
 
