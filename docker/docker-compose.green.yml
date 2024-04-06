@@ -4,7 +4,7 @@ services:
   backend:
     build: .
     ports:
-      - "3000:8080"
+      - "8080:8080"
     container_name: daybook-green
     environment:
       - TZ=Asia/Seoul
