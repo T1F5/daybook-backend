@@ -9,14 +9,16 @@ public record AddBoardResponseDto(
         String content,
         Long respectBoardId,
         Long authorId,
+
         String category,
         Long hearts,
-        List<String> hashtags
+        List<String> hashtags,
+        String paperType
 
 ) {
 
     public static AddBoardResponseDto from(Board board) {
         List<String> hashContents = board.getHashtags().stream().map(hashtag -> hashtag.getContent()).toList();
-        return new AddBoardResponseDto(board.getBoardId(), board.getContent(), board.getRespectBoardId(), board.getMemeber().getId(), board.getCategory(), board.getHearts(), hashContents);
+        return new AddBoardResponseDto(board.getBoardId(), board.getContent(), board.getRespectBoardId(), board.getMemeber().getId(), board.getCategory(), board.getHearts(), hashContents, board.getPaperType());
     }
 }

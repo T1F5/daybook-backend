@@ -35,19 +35,23 @@ public class Board extends BaseTimeEntity {
     private Member memeber;
 
     @Column
+    private String paperType;
+
+    @Column
     private Long hearts;
 
     @OneToMany(mappedBy = "board")
     private List<Hashtag> hashtags = new ArrayList<>();
 
     @Builder(access = AccessLevel.PRIVATE)
-    public Board(Long boardId, String content, Long respectBoardId, Member member, String category, Long hearts) {
+    public Board(Long boardId, String content, Long respectBoardId, Member member, String category, Long hearts, String paperType) {
         this.boardId = boardId;
         this.content = content;
         this.respectBoardId = respectBoardId;
         this.memeber = member;
         this.category = category;
         this.hearts = hearts;
+        this.paperType = paperType;
     }
 
     public static Board createBoard(AddBoardRequestDto addBoardRequestDto, Member member) {
@@ -55,6 +59,7 @@ public class Board extends BaseTimeEntity {
                 .content(addBoardRequestDto.content())
                 .respectBoardId(addBoardRequestDto.respectBoardId())
                 .member(member)
+                .paperType(addBoardRequestDto.paperType())
                 .category(addBoardRequestDto.category())
                 .hearts(0L)
                 .build();

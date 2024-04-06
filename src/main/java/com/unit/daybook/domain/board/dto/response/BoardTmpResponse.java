@@ -13,6 +13,7 @@ public class BoardTmpResponse {
     private Long authorId;
     private String category;
     private Long hearts;
+    private String papaerType;
     private  List<String> hashtags;
 
     @Builder
@@ -23,6 +24,7 @@ public class BoardTmpResponse {
         this.authorId = dto.authorId();
         this.category = dto.category();
         this.hearts = dto.hearts();
+        this.papaerType = dto.paperType();
         this.hashtags = hashtags;
     }
 }
