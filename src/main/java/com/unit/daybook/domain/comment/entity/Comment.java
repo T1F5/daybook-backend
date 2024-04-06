@@ -1,6 +1,7 @@
 package com.unit.daybook.domain.comment.entity;
 
 import com.unit.daybook.domain.board.entity.Board;
+import com.unit.daybook.domain.common.model.BaseTimeEntity;
 import com.unit.daybook.domain.member.domain.Member;
 
 import jakarta.persistence.Column;
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "comment")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment {
+public class Comment extends BaseTimeEntity {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)

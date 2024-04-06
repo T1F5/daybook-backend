@@ -2,6 +2,7 @@ package com.unit.daybook.domain.board.entity;
 
 
 import com.unit.daybook.domain.board.dto.request.AddBoardRequestDto;
+import com.unit.daybook.domain.common.model.BaseTimeEntity;
 import com.unit.daybook.domain.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -15,7 +16,7 @@ import java.util.List;
 @Entity
 @Table(name = "hashtag")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Hashtag {
+public class Hashtag extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hashtag_id")

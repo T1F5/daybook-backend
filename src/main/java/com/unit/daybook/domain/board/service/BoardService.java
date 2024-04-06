@@ -10,6 +10,9 @@ import com.unit.daybook.domain.board.entity.Hashtag;
 import com.unit.daybook.domain.board.entity.ReadBoard;
 import com.unit.daybook.domain.board.repository.*;
 
+import com.unit.daybook.domain.comment.dto.response.FindOneCommentResponse;
+import com.unit.daybook.domain.comment.entity.Comment;
+import com.unit.daybook.domain.comment.repository.CommentRepository;
 import com.unit.daybook.domain.member.domain.Member;
 import com.unit.daybook.domain.member.repository.MemberRepository;
 import com.unit.daybook.domain.reaction.dto.response.ReactionTypeAndCount;
@@ -33,6 +36,7 @@ public class BoardService {
     private final ReadBoardRepository readBoardRepository;
     private final HashtagRepository hashtagRepository;
     private final ReactionRepository reactionRepository;
+    private final CommentRepository commentRepository;
 
     public BoardResponseDto addBoard(AddBoardRequestDto addBoardRequestDto, Long memberId) {
         Member member = memberRepository
@@ -60,8 +64,11 @@ public class BoardService {
         Board board = boardRepository.findById(boardId)
             .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
         List<ReactionTypeAndCount> reactions = reactionRepository.findAllByBoardGroupByReactionType(board);
-
-        return FindOneBoardResponse.of(board, reactions);
+        List<FindOneCommentResponse> comments = commentRepository.findCommentByBoard(boardId)
+            .stream()
+            .map(FindOneCommentResponse::from)
+            .toList();
+        return FindOneBoardResponse.of(board, reactions, comments);
     }
 
     @Transactional(readOnly = true)
