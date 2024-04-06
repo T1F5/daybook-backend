@@ -38,7 +38,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .where(
                         // member.id.eq(memberId)
                                 //.and(
-                                        board.in(alreadyReadBoardIds)
+                                        board.notIn(alreadyReadBoardIds)
                                         //)
                 )
                 .fetch();

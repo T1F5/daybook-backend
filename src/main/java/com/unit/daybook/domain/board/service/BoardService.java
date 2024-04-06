@@ -70,7 +70,6 @@ public class BoardService {
         return FindBoardListResponse.from(boards);
     }
 
-    @Transactional(readOnly = true)
     public List<BoardResponseDto> getRandomBoards(Long memberId) {
         List<BoardResponseDto> result = getTodayBoardByMemberId(memberId);
         if (result.size() < 3) {
@@ -89,9 +88,11 @@ public class BoardService {
         result = new ArrayList<>();
         List<Board> boards = getCurrentBoards(memberId);
         // read-board 에도 적재
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException(memberId + "not found"));
+        Member member = memberRepository
+            .findById(memberId)
+            .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         int toSave = 3 - result.size();
-        for (int i =0 ; i<toSave; i++) {
+        for (int i = 0 ; i < toSave; i++) {
             ReadBoard entity = ReadBoard.createReadBoard(member, boards.get(i));
             result.add(BoardResponseDto.from(boards.get(i)));
             readBoardRepository.save(entity);
@@ -117,7 +118,7 @@ public class BoardService {
 
 			// 적재
 			Member member = memberRepository.findById(memberId)
-				.orElseThrow(() -> new RuntimeException(memberId + "not found"));
+				.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 			readBoardRepository.save(
 				ReadBoard.createReadBoard(member, notReadBoards.get(Math.toIntExact(randomIdxs.get(0)))));
 			readBoardRepository.save(
