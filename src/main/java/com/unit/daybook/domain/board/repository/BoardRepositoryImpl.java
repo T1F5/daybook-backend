@@ -20,9 +20,9 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
     public List<Board> findBoardsByMemberId(Long memberId) {
 
         return queryFactory
-                .select(board)
-                .from(board)
-                .join(board.memeber, member).fetchJoin()
+                .selectFrom(board)
+                .leftJoin(board.member, member)
+                .fetchJoin()
                 .where(
                         member.id.eq(memberId)
                 )
@@ -34,7 +34,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
         return queryFactory
                 .select(board)
                 .from(board)
-                .join(board.memeber, member).fetchJoin()
+                .join(board.member, member).fetchJoin()
                 .where(
                         // member.id.eq(memberId)
                                 //.and(
@@ -88,7 +88,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
         tmps.add(memberId);
         return queryFactory
                 .selectFrom(board)
-                .where(board.memeber.id.notIn(tmps))
+                .where(board.member.id.notIn(tmps))
                 .fetch();
     }
 }

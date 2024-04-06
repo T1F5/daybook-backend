@@ -64,17 +64,24 @@ public class BoardService {
         Board board = boardRepository.findById(boardId)
             .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
         List<ReactionTypeAndCount> reactions = reactionRepository.findAllByBoardGroupByReactionType(board);
-        List<FindOneCommentResponse> comments = commentRepository.findCommentByBoard(boardId)
-            .stream()
-            .map(FindOneCommentResponse::from)
-            .toList();
-        return FindOneBoardResponse.of(board, reactions, comments);
+        // List<FindOneCommentResponse> comments = commentRepository.findCommentByBoard(boardId)
+        //     .stream()
+        //     .map(FindOneCommentResponse::from)
+        //     .toList();
+        return FindOneBoardResponse.of(board, reactions, List.of());
     }
 
     @Transactional(readOnly = true)
-    public FindBoardListResponse getMyBoards(Long memberId) {
-        List<Board> boards= boardRepository.findBoardsByMemberId(memberId);
-        return FindBoardListResponse.from(boards);
+    public List<FindOneBoardResponse> getMyBoards(Long memberId) {
+        List<Board> boards = boardRepository.findBoardsByMemberId(memberId);
+        List<FindOneBoardResponse> boardResponses = new ArrayList<>();
+
+        for (Board board : boards) {
+            List<ReactionTypeAndCount> reactions = reactionRepository.findAllByBoardGroupByReactionType(board);
+            boardResponses.add(FindOneBoardResponse.of(board, reactions, List.of()));
+        }
+
+        return boardResponses;
     }
 
     public List<BoardResponseDto> getRandomBoards(Long memberId) {

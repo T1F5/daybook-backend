@@ -24,7 +24,7 @@ public record BoardResponseDto(
             board.getBoardId(),
             board.getContent(),
             board.getRespectBoardId(),
-            board.getMemeber().getId(),
+            board.getMember().getId(),
             board.getCategory(),
             board.getHearts(),
             hashContents,

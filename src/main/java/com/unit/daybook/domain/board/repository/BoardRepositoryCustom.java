@@ -2,6 +2,7 @@ package com.unit.daybook.domain.board.repository;
 
 import java.util.List;
 
+import com.unit.daybook.domain.board.dto.response.FindOneBoardResponse;
 import com.unit.daybook.domain.board.entity.Board;
 
 public interface BoardRepositoryCustom {

@@ -22,7 +22,7 @@ public record FindBoardResponse(
 			board.getBoardId(),
 			board.getContent(),
 			board.getRespectBoardId(),
-			board.getMemeber().getId(),
+			board.getMember().getId(),
 			board.getCategory(),
 			board.getHearts(),
 			board.getPaperType(),

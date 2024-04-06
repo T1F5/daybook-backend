@@ -30,9 +30,8 @@ public class BoardController {
      * 사용자가 작성한 일지 목록 조회
      */
     @GetMapping("/boards")
-    public List<FindBoardResponse> getMyBoards(@LoginUsers CustomUserDetails userDetails) {
-        FindBoardListResponse tmp = boardService.getMyBoards(userDetails.getMemberId());
-        return tmp.boards();
+    public List<FindOneBoardResponse> getMyBoards(@LoginUsers CustomUserDetails userDetails) {
+        return boardService.getMyBoards(userDetails.getMemberId());
     }
 
     /**

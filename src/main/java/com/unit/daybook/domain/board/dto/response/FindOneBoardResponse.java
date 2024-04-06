@@ -30,7 +30,7 @@ public record FindOneBoardResponse(
 			board.getBoardId(),
 			board.getContent(),
 			board.getRespectBoardId(),
-			board.getMemeber().getId(),
+			board.getMember().getId(),
 			board.getCategory(),
 			heartsFromReactions,
 			hashContents,

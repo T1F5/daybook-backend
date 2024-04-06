@@ -35,7 +35,7 @@ public class Board extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "member_id")
-    private Member memeber;
+    private Member member;
 
     @Column
     private String paperType;
@@ -57,7 +57,7 @@ public class Board extends BaseTimeEntity {
         this.boardId = boardId;
         this.content = content;
         this.respectBoardId = respectBoardId;
-        this.memeber = member;
+        this.member = member;
         this.category = category;
         this.hearts = hearts;
         this.paperType = paperType;
