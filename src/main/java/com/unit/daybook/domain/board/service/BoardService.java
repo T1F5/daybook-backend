@@ -93,7 +93,7 @@ public class BoardService {
         int toSave = 3 - result.size();
         for (int i =0 ; i<toSave; i++) {
             ReadBoard entity = ReadBoard.createReadBoard(member, boards.get(i));
-            result.add(AddBoardResponseDto.from(boards.get(i)));
+            result.add(BoardResponseDto.from(boards.get(i)));
             readBoardRepository.save(entity);
         }
 
