@@ -22,7 +22,13 @@ public enum ErrorCode {
 	EXPIRED_REFRESH_TOKEN(HttpStatus.FORBIDDEN, "리프레시 토큰이 만료되었습니다."),
 
 	// Member
-	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다.");
+	MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다."),
+
+	// Board
+	BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 일지입니다."),
+
+	// Reaction
+	REACTION_EXISTS(HttpStatus.CONFLICT, "이미 리액션을 하였습니다.");
 	private final HttpStatus status;
 	private final String message;
 }
