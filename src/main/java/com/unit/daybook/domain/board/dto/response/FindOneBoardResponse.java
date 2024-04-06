@@ -6,6 +6,7 @@ import java.util.List;
 import com.unit.daybook.domain.board.entity.Board;
 import com.unit.daybook.domain.board.entity.Hashtag;
 import com.unit.daybook.domain.reaction.dto.response.ReactionTypeAndCount;
+import com.unit.daybook.domain.reaction.entity.Reaction;
 
 public record FindOneBoardResponse(
 	Long boardId,
@@ -22,13 +23,14 @@ public record FindOneBoardResponse(
 ) {
 	public static FindOneBoardResponse of(Board board, List<ReactionTypeAndCount> reactions) {
 		List<String> hashContents = board.getHashtags().stream().map(Hashtag::getContent).toList();
+		Long heartsFromReactions = reactions.stream().mapToLong(ReactionTypeAndCount::count).sum();
 		return new FindOneBoardResponse(
 			board.getBoardId(),
 			board.getContent(),
 			board.getRespectBoardId(),
 			board.getMemeber().getId(),
 			board.getCategory(),
-			board.getHearts(),
+			heartsFromReactions,
 			hashContents,
 			board.getPaperType(),
 			reactions,
