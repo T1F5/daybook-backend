@@ -2,6 +2,7 @@ package com.unit.daybook.domain.board.controller;
 
 import com.unit.daybook.domain.board.dto.request.AddBoardRequestDto;
 import com.unit.daybook.domain.board.dto.response.AddBoardResponseDto;
+import com.unit.daybook.domain.board.dto.response.BoardTmpResponse;
 import com.unit.daybook.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -41,13 +42,14 @@ public class BoardController {
     }
 
     @PostMapping
-    public AddBoardResponseDto addBoard(@RequestBody AddBoardRequestDto addBoardRequestDto) {
+    public BoardTmpResponse addBoard(@RequestBody AddBoardRequestDto addBoardRequestDto) {
         Long memberId = 1L; // TODO 인증
-        return boardService.addBoard(addBoardRequestDto, memberId);
+        AddBoardResponseDto board = boardService.addBoard(addBoardRequestDto, memberId);
+        return boardService.getBoardWithHashTag(board.boardId());
     }
 
     @PostMapping("/{boardId}")
-    public AddBoardResponseDto modifyBoard(@PathVariable("boardId") Long boardId, @RequestBody AddBoardRequestDto addBoardRequestDto) {
+    public BoardTmpResponse modifyBoard(@PathVariable("boardId") Long boardId, @RequestBody AddBoardRequestDto addBoardRequestDto) {
         return boardService.modifyBoard(boardId, addBoardRequestDto);
     }
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.unit.daybook.domain.board.entity.QBoard.board;
+import static com.unit.daybook.domain.board.entity.QHashtag.hashtag;
 import static com.unit.daybook.domain.member.domain.QMember.member;
 
 @Repository
@@ -48,6 +49,32 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .where(
                         board.boardId.in(todayBoards)
                 )
+                .fetch();
+
+    }
+
+    public List<Board> findBoardInWith(List<Long> todayBoards) {
+        return queryFactory
+                .select(board)
+                .from(board)
+                .where(
+                        board.boardId.in(todayBoards)
+                )
+                .fetch();
+
+    }
+
+    public List<Board> findBoardWithHashtag(Long boardId) {
+//        return queryFactory
+//                .selectFrom(board)
+//                .join(board.hashtags, hashtag).fetchJoin()
+//                .where(board.boardId.eq(boardId))
+//                .fetch();
+
+        return queryFactory
+                .selectFrom(board)
+                .innerJoin(board.hashtags, hashtag)
+                .where(board.boardId.eq(boardId))
                 .fetch();
 
     }
