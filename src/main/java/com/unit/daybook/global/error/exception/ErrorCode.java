@@ -28,7 +28,12 @@ public enum ErrorCode {
 	BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 일지입니다."),
 
 	// Reaction
-	REACTION_EXISTS(HttpStatus.CONFLICT, "이미 리액션을 하였습니다.");
+	REACTION_EXISTS(HttpStatus.CONFLICT, "이미 리액션을 하였습니다."),
+
+	// 댓글
+	COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 댓글입니다."),
+
+	;
 	private final HttpStatus status;
 	private final String message;
 }
