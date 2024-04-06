@@ -29,10 +29,12 @@ public class AuthController {
 		) {
 		SocialLoginResponse response = authService.socialLoginMember(params);
 
-		String accessToken = response.accessToken();
-		String refreshToken = response.refreshToken();
-		HttpHeaders tokenHeaders = cookieUtil.generateTokenCookies(accessToken, refreshToken);
+		// String accessToken = response.accessToken();
+		// String refreshToken = response.refreshToken();
+		// HttpHeaders tokenHeaders = cookieUtil.generateTokenCookies(accessToken, refreshToken);
 
-		return ResponseEntity.ok().headers(tokenHeaders).body(response);
+		return ResponseEntity.ok()
+			// .headers(tokenHeaders)
+			.body(response);
 	}
 }
