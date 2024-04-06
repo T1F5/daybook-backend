@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class KakaoLoginParams implements OAuthLoginParams {
-	private String authorizationCode;
+	private String code;
 
 	@Override
 	public OauthProvider oAuthProvider() {
@@ -23,7 +23,7 @@ public class KakaoLoginParams implements OAuthLoginParams {
 	@Override
 	public MultiValueMap<String, String> makeBody() {
 		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-		body.add("code", authorizationCode);
+		body.add("code", code);
 		return body;
 	}
 }

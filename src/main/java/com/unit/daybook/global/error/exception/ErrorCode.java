@@ -17,7 +17,8 @@ public enum ErrorCode {
 
 	// Auth
 	KAKAO_RESPONSE_NOT_FOUND(HttpStatus.UNAUTHORIZED, "카카오에 대한 응답값이 존재하지 않습니다."),
-	CLAIMS_IS_NULL(HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않습니다.")
+	CLAIMS_IS_NULL(HttpStatus.UNAUTHORIZED, "Claim이 null 값입니다."),
+	INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않는 토큰입니다."),
 	;
 	private final HttpStatus status;
 	private final String message;
