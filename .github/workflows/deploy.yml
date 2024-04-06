@@ -79,4 +79,4 @@ jobs:
         run: aws deploy create-deployment --application-name daybook-code-deploy-app
           --deployment-config-name CodeDeployDefault.AllAtOnce
           --deployment-group-name daybook-code-deploy-app
-          --s3-location bucket=daybook-backend-app,bundleType=zip,key=daybook-app.zip
+          --s3-location bucket=daybook-server,bundleType=zip,key=daybook-app.zip
