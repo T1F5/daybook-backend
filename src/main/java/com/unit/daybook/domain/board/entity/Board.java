@@ -6,6 +6,9 @@ import com.unit.daybook.domain.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Getter
 @Entity
@@ -33,6 +36,9 @@ public class Board extends BaseTimeEntity {
 
     @Column
     private Long hearts;
+
+    @OneToMany(mappedBy = "board")
+    private List<Hashtag> hashtags = new ArrayList<>();
 
     @Builder(access = AccessLevel.PRIVATE)
     public Board(Long boardId, String content, Long respectBoardId, Member member, String category, Long hearts) {
