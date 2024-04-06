@@ -40,7 +40,7 @@ public class Board extends BaseTimeEntity {
     @Column
     private Long hearts;
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Hashtag> hashtags = new ArrayList<>();
 
     @Builder(access = AccessLevel.PRIVATE)
