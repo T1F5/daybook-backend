@@ -1,12 +1,11 @@
-package com.unit.daybook.global.config.security;
+package com.unit.daybook.domain.auth.service;
 
 import java.io.IOException;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.unit.daybook.domain.auth.service.TokenService;
+import com.unit.daybook.global.config.security.CustomUserDetails;
 import com.unit.daybook.global.error.exception.CustomException;
 import com.unit.daybook.global.error.exception.ErrorCode;
 
@@ -18,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class TokenFilter extends OncePerRequestFilter {
 

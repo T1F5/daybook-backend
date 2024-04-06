@@ -23,6 +23,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.unit.daybook.domain.auth.service.TokenFilter;
 import com.unit.daybook.global.common.constants.UrlConstants;
 import com.unit.daybook.global.common.exception.ExceptionHandlerFilter;
 

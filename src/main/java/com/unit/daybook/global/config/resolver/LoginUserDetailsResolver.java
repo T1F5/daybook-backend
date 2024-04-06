@@ -8,7 +8,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.unit.daybook.domain.common.annotation.LoginUsers;
-import com.unit.daybook.global.config.security.SecurityService;
+import com.unit.daybook.domain.auth.service.SecurityService;
 
 import lombok.RequiredArgsConstructor;
 
