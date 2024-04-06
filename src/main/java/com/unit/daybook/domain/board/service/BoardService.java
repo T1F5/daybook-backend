@@ -15,9 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Transactional
 @Service
@@ -114,5 +112,18 @@ public class BoardService {
         }
 
         return randomNumbers;
+    }
+
+    public AddBoardResponseDto modifyBoard(Long boardId, AddBoardRequestDto addBoardRequestDto) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new RuntimeException(boardId + ""));
+        board.modifyBoard(addBoardRequestDto);
+        return AddBoardResponseDto.from(board);
+    }
+
+    public Map<String, Long> deleteBoard(Long boardId) {
+        boardRepository.deleteById(boardId);
+        Map<String, Long> result = new HashMap<>();
+        result.put("boardId", boardId);
+        return result;
     }
 }

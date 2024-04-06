@@ -58,4 +58,9 @@ public class Board extends BaseTimeEntity {
         this.hearts += 1;
     }
 
+    public void modifyBoard(AddBoardRequestDto addBoardRequestDto) {
+        this.content = addBoardRequestDto.content();
+        this.category = addBoardRequestDto.category();
+    }
+
 }

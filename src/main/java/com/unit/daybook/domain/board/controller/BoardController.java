@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RequestMapping("/board")
@@ -46,13 +47,18 @@ public class BoardController {
     }
 
     @PostMapping("/{boardId}")
-    public String modifyBoard(@PathVariable("boardId") Long boardId) {
-        return "수정 성공";
+    public AddBoardResponseDto modifyBoard(@PathVariable("boardId") Long boardId, @RequestBody AddBoardRequestDto addBoardRequestDto) {
+        return boardService.modifyBoard(boardId, addBoardRequestDto);
     }
 
     @DeleteMapping("/{boardId}")
-    public String deleteBoard(@PathVariable("boardId") Long boardId) {
-        return "삭제 성공";
+    public Map<String, Long> deleteBoard(@PathVariable("boardId") Long boardId) {
+        return boardService.deleteBoard(boardId);
     }
 
+    @GetMapping("/test")
+    public String test() {
+        boardService.batchReadBoard();
+        return "test";
+    }
 }
