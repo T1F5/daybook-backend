@@ -9,14 +9,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.unit.daybook.domain.board.entity.QBoard.board;
+import static com.unit.daybook.domain.member.domain.QMember.member;
+
 @Repository
 @RequiredArgsConstructor
 public class BoardRepositoryImpl  implements BoardRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     public List<Board> findBoardsByMemberId(Long memberId) {
-        QBoard board = QBoard.board;
-        QMember member = QMember.member;
 
         List<Board> boards = queryFactory
                 .select(board)

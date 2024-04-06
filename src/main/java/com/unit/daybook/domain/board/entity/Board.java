@@ -31,13 +31,17 @@ public class Board extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member memeber;
 
+    @Column
+    private Long hearts;
+
     @Builder(access = AccessLevel.PRIVATE)
-    public Board(Long boardId, String content, Long respectBoardId, Member member, String category) {
+    public Board(Long boardId, String content, Long respectBoardId, Member member, String category, Long hearts) {
         this.boardId = boardId;
         this.content = content;
         this.respectBoardId = respectBoardId;
         this.memeber = member;
         this.category = category;
+        this.hearts = hearts;
     }
 
     public static Board createBoard(AddBoardRequestDto addBoardRequestDto, Member member) {
@@ -46,7 +50,12 @@ public class Board extends BaseTimeEntity {
                 .respectBoardId(addBoardRequestDto.respectBoardId())
                 .member(member)
                 .category(addBoardRequestDto.category())
+                .hearts(0L) // todo
                 .build();
+    }
+
+    public void plusRespect() {
+        this.hearts += 1;
     }
 
 }

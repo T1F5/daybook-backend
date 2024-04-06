@@ -26,8 +26,16 @@ public class BoardService {
 
     public AddBoardResponseDto addBoard(AddBoardRequestDto addBoardRequestDto, Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException(memberId + "not found"));
+        if (addBoardRequestDto.respectBoardId() != null) {
+            Board respectBoard = boardRepository.findById(addBoardRequestDto.respectBoardId()).orElseThrow(() -> new RuntimeException(addBoardRequestDto.respectBoardId() + "not found"));
+            respectBoard.plusRespect();
+            boardRepository.save(respectBoard);
+        }
+        // 글의 카운트 올리기.. redis..?
+
         return AddBoardResponseDto.from(boardRepository.save(Board.createBoard(addBoardRequestDto, member)));
     }
+
 
     public AddBoardResponseDto getBoard(Long boardId) {
         return AddBoardResponseDto.from(
@@ -38,7 +46,11 @@ public class BoardService {
         // TODO 페이지네이션 - 스와이프 방식?
         return boardRepositoryImpl.findBoardsByMemberId(memberId)
                 .stream()
-                .map(b -> AddBoardResponseDto.from(b))
-                .collect(Collectors.toList());
+                .map(AddBoardResponseDto::from)
+                .toList();
+    }
+
+    public List<AddBoardResponseDto> getRandomBoards(Long memberId) {
+        return null;
     }
 }
