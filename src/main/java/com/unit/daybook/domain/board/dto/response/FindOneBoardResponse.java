@@ -25,14 +25,13 @@ public record FindOneBoardResponse(
 ) {
 	public static FindOneBoardResponse of(Board board, List<ReactionTypeAndCount> reactions, List<FindOneCommentResponse> comments) {
 		List<String> hashContents = board.getHashtags().stream().map(Hashtag::getContent).toList();
-		Long heartsFromReactions = reactions.stream().mapToLong(ReactionTypeAndCount::count).sum();
 		return new FindOneBoardResponse(
 			board.getBoardId(),
 			board.getContent(),
 			board.getRespectBoardId(),
 			board.getMember().getId(),
 			board.getCategory(),
-			heartsFromReactions,
+			board.getHearts(),
 			hashContents,
 			board.getPaperType(),
 			reactions,
