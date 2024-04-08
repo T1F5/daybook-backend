@@ -1,6 +1,5 @@
 package com.unit.daybook.domain.auth.kakao;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -9,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import com.unit.daybook.domain.auth.common.OAuthApiClient;
 import com.unit.daybook.domain.auth.common.OAuthInfoResponse;
@@ -16,7 +16,8 @@ import com.unit.daybook.domain.auth.common.OAuthLoginParams;
 import com.unit.daybook.domain.auth.dto.request.OauthProvider;
 import com.unit.daybook.global.error.exception.CustomException;
 import com.unit.daybook.global.error.exception.ErrorCode;
-import org.springframework.web.client.RestTemplate;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor

@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 public class CustomUserDetails implements UserDetails {
 
-	private Long memberId;
+	private final Long memberId;
 	private final String snsId;
 	private final String email;
 	private final String nickname;

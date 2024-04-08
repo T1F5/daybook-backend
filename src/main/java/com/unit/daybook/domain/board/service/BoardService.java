@@ -36,7 +36,6 @@ public class BoardService {
     private final ReadBoardRepository readBoardRepository;
     private final HashtagRepository hashtagRepository;
     private final ReactionRepository reactionRepository;
-    private final CommentRepository commentRepository;
 
     public BoardResponseDto addBoard(AddBoardRequestDto addBoardRequestDto, Long memberId) {
         Member member = memberRepository
@@ -64,10 +63,6 @@ public class BoardService {
         Board board = boardRepository.findById(boardId)
             .orElseThrow(() -> new CustomException(ErrorCode.BOARD_NOT_FOUND));
         List<ReactionTypeAndCount> reactions = reactionRepository.findAllByBoardGroupByReactionType(board);
-        // List<FindOneCommentResponse> comments = commentRepository.findCommentByBoard(boardId)
-        //     .stream()
-        //     .map(FindOneCommentResponse::from)
-        //     .toList();
         return FindOneBoardResponse.of(board, reactions, List.of());
     }
 
@@ -160,30 +155,15 @@ public class BoardService {
         return randomNumbers;
     }
 
-    // public BoardTmpResponse modifyBoard(Long boardId, AddBoardRequestDto addBoardRequestDto) {
-    //     Board board = boardRepository.findById(boardId).orElseThrow(() -> new RuntimeException(boardId + ""));
-    //     board.modifyBoard(addBoardRequestDto);
-    //     List<String> newHashContents = addBoardRequestDto.hashtags();
-    //     List<String> newHashContents2 = addBoardRequestDto.hashtags();
-    //
-    //     List<Hashtag> originHashContents = board.getHashtags();
-    //
-	// 	for (String newHashContent : newHashContents) {
-	// 		hashtagRepository.save(Hashtag.createHashtag(newHashContent, board));
-	// 	}
-    //
-    //     return BoardTmpResponse.builder().dto(AddBoardResponseDto.from(board)).hashtags(newHashContents).build();
-    // }
-
     public void deleteBoard(Long boardId) {
         boardRepository.deleteById(boardId);
     }
 
+    @Transactional(readOnly = true)
     public BoardTmpResponse getBoardWithHashTag(Long boardId) {
         List<String> hashContents = hashtagRepository.findAllByBoardId(boardId);
         FindOneBoardResponse result = getBoard(boardId);
-        return BoardTmpResponse.builder().dto(result).hashtags(hashContents).build();
-
+        return BoardTmpResponse.of(result, hashContents);
     }
 
     private List<Board> getCurrentBoards(Long memberId) {

@@ -54,20 +54,9 @@ public class BoardController {
         return boardService.getBoardWithHashTag(board.boardId());
     }
 
-    // @PostMapping("/{boardId}")
-    // public BoardTmpResponse modifyBoard(@PathVariable("boardId") Long boardId, @RequestBody AddBoardRequestDto addBoardRequestDto) {
-    //     return boardService.modifyBoard(boardId, addBoardRequestDto);
-    // }
-
     @DeleteMapping("/{boardId}")
     public ResponseEntity<Void> deleteBoard(@PathVariable("boardId") Long boardId) {
         boardService.deleteBoard(boardId);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/test")
-    public String test() {
-        boardService.batchReadBoard();
-        return "test";
     }
 }

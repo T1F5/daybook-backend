@@ -18,10 +18,7 @@ public class todayBoardsScheduler {
     private final MemberRepository memberRepository;
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     public void run() {
-        System.out.println(LocalDateTime.now().toString());
-        List<Long> memberIds = memberRepository.findAll().stream().map(Member::getId).toList();
-
+        // List<Long> memberIds = memberRepository.findAll().stream().map(Member::getId).toList();
         boardService.batchReadBoard();
-
     }
 }

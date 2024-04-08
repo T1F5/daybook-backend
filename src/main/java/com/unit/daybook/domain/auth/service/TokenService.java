@@ -31,8 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Component
 public class TokenService {
-	private static final Long DEFAULT_EXPIRATION_MINUTES = 60L;
-
 	@Value("${util.jwt.secretKey}")
 	private String secretKey;
 
@@ -47,10 +45,6 @@ public class TokenService {
 			return authHeader.substring(7);
 		}
 		return null;
-	}
-
-	public static String parseReFreshTokenByRequest(HttpServletRequest request) {
-		return request.getHeader("refresh-token");
 	}
 
 	public Map<String, Object> generateDefaultClaims(Member member, Long plusExpMinutes) {
@@ -85,19 +79,13 @@ public class TokenService {
 	}
 
 	// 자동 로그인 사용 시 아래 메서드 사용
-	public String generateToken(Member user, Boolean remember) {
-		Long expMin = remember ? DEFAULT_EXPIRATION_MINUTES * 24 * 7 : DEFAULT_EXPIRATION_MINUTES;
-		Map<String, Object> claims = generateDefaultClaims(user, expMin);
+	// public String generateToken(Member user, Boolean remember) {
+	// 	Long expMin = remember ? DEFAULT_EXPIRATION_MINUTES * 24 * 7 : DEFAULT_EXPIRATION_MINUTES;
+	// 	Map<String, Object> claims = generateDefaultClaims(user, expMin);
+	//
+	// 	return generateToken(claims, createSecretKey(secretKey));
+	// }
 
-		return generateToken(claims, createSecretKey(secretKey));
-	}
-
-	public String generateRefreshToken(Member user, Boolean remember) {
-		Long expMin = remember ? DEFAULT_EXPIRATION_MINUTES * 24 * 30 : DEFAULT_EXPIRATION_MINUTES * 4;
-		Map<String, Object> claims = generateReFreshClaims(user, expMin);
-
-		return generateRefreshToken(claims, createSecretKey(secretKey));
-	}
 
 	public String generateToken(Member member, Long plusExpMinutes) {
 		Map<String, Object> claims = generateDefaultClaims(member, plusExpMinutes);

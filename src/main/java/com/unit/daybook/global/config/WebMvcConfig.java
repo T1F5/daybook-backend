@@ -24,13 +24,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		argumentResolvers.add(loginUserDetailsResolver);
 	}
 
-	@Override
-	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**")
-				.allowedOrigins("*")
-				.allowedMethods(Arrays.stream(HttpMethod.values())
-						.map(HttpMethod::name)
-						.toArray(String[]::new))
-				.allowedHeaders("*");
-	}
 }

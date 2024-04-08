@@ -1,16 +1,17 @@
 package com.unit.daybook.domain.board.repository;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.unit.daybook.domain.board.entity.Board;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import static com.unit.daybook.domain.board.entity.QBoard.*;
+import static com.unit.daybook.domain.member.domain.QMember.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.unit.daybook.domain.board.entity.QBoard.board;
-import static com.unit.daybook.domain.board.entity.QHashtag.hashtag;
-import static com.unit.daybook.domain.member.domain.QMember.member;
+import org.springframework.stereotype.Repository;
+
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.unit.daybook.domain.board.entity.Board;
+
+import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
@@ -36,10 +37,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .from(board)
                 .join(board.member, member).fetchJoin()
                 .where(
-                        // member.id.eq(memberId)
-                                //.and(
-                                        board.notIn(alreadyReadBoardIds)
-                                        //)
+                    board.notIn(alreadyReadBoardIds)
                 )
                 .fetch();
 
@@ -67,21 +65,6 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
     }
 
-    public List<Board> findBoardWithHashtag(Long boardId) {
-//        return queryFactory
-//                .selectFrom(board)
-//                .join(board.hashtags, hashtag).fetchJoin()
-//                .where(board.boardId.eq(boardId))
-//                .fetch();
-
-        return queryFactory
-                .selectFrom(board)
-                .innerJoin(board.hashtags, hashtag)
-                .where(board.boardId.eq(boardId))
-                .limit(3)
-                .fetch();
-
-    }
 
     public List<Board> findCurrentBoards(Long memberId) {
         ArrayList<Long> tmps = new ArrayList<>();

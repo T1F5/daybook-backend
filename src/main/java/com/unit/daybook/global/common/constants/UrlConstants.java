@@ -10,7 +10,7 @@ public enum UrlConstants {
 	PROD_SERVER_URL("https://daybook.shop"),
 	LOCAL_SERVER_URL("http://localhost:8080"),
 
-	PROD_DOMAIN_URL("https://www.daybook.co.kr"),
+	PROD_DOMAIN_URL("https://daybook.site"),
 	LOCAL_DOMAIN_URL("http://localhost:5173"),
 
 	;

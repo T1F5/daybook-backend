@@ -87,9 +87,8 @@ public class WebSecurityConfig {
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 
-		// configuration.addAllowedOriginPattern(UrlConstants.PROD_DOMAIN_URL.getValue());
-		// configuration.addAllowedOriginPattern(UrlConstants.LOCAL_DOMAIN_URL.getValue());
-		configuration.addAllowedOriginPattern("*");
+		configuration.addAllowedOriginPattern(UrlConstants.PROD_DOMAIN_URL.getValue());
+		configuration.addAllowedOriginPattern(UrlConstants.LOCAL_DOMAIN_URL.getValue());
 		configuration.addAllowedMethod("*");
 		configuration.addAllowedHeader("*");
 		configuration.setAllowCredentials(true);

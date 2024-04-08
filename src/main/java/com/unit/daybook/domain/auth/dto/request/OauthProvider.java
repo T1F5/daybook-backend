@@ -9,5 +9,4 @@ public enum OauthProvider {
 	KAKAO("KAKAO"),
 	;
 	private final String value;
-
 }

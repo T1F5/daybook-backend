@@ -1,33 +1,31 @@
 package com.unit.daybook.domain.board.dto.response;
 
-import lombok.Builder;
-import lombok.Getter;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-public class BoardTmpResponse {
-    private Long boardId;
-    private String content;
-    private Long respectBoardId;
-    private Long authorId;
-    private String category;
-    private Long hearts;
-    private String papaerType;
-    private List<String> hashtags;
-    private LocalDateTime createdAt;
+public record BoardTmpResponse (
+    Long boardId,
+    String content,
+    Long respectBoardId,
+    Long authorId,
+    String category,
+    Long hearts,
+    String papaerType,
+    List<String> hashtags,
+    LocalDateTime createdAt
+) {
 
-    @Builder
-    public BoardTmpResponse(FindOneBoardResponse dto, List<String> hashtags) {
-        this.boardId = dto.boardId();
-        this.content = dto.content();
-        this.respectBoardId = dto.respectBoardId();
-        this.authorId = dto.authorId();
-        this.category = dto.category();
-        this.hearts = dto.hearts();
-        this.papaerType = dto.paperType();
-        this.hashtags = hashtags;
-        this.createdAt = dto.createdAt();
+    public static BoardTmpResponse of(FindOneBoardResponse dto, List<String> hashtags) {
+        return new BoardTmpResponse(
+            dto.boardId(),
+            dto.content(),
+            dto.respectBoardId(),
+            dto.authorId(),
+            dto.category(),
+            dto.hearts(),
+            dto.paperType(),
+            hashtags,
+            dto.createdAt()
+        );
     }
 }
